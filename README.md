@@ -102,3 +102,79 @@ AI is allowed to suggest structure but never define truth.
 All persisted financial data passes through schema validation and reconciliation logic.
 
 The system converts probabilistic outputs into deterministic accounting data.
+
+## Operational Reliability
+
+Operating a financial system means failures are expected and must be contained.
+
+The platform is designed so that incorrect data is harder to produce than a processing failure.
+
+### AI extraction failures
+
+LLM output may omit transactions or misinterpret document structure.
+
+Mitigation:
+
+- reconciliation against official totals
+- automatic reprocessing when mismatch occurs
+- fallback categorization instead of silent discard
+
+The system prefers retrying over persisting uncertainty.
+
+---
+
+### External dependency instability
+
+AI providers and payment gateways are external dependencies.
+
+Mitigation:
+
+- retry with backoff for transient errors
+- idempotent processing jobs
+- safe re-execution of failed tasks
+
+A failed task can be executed multiple times without duplicating financial records.
+
+---
+
+### Partial processing
+
+Statements often contain multiple cards and sections.
+
+Mitigation:
+
+- independent processing units per card
+- deduplication layer before persistence
+- atomic persistence only after validation
+
+This prevents partial corruption of financial history.
+
+---
+
+### Cost explosion protection
+
+AI costs scale with usage.
+
+Mitigation:
+
+- model selection based on task complexity
+- caching of repeated classifications
+- early validation before expensive operations
+
+Incorrect or malformed inputs are rejected before AI usage.
+
+---
+
+### Scaling risks
+
+The primary scaling risks identified:
+
+- AI rate limits
+- database connection pool exhaustion
+- polling overhead
+
+Planned evolution:
+
+- queue throttling
+- connection pooling
+- event-driven status updates
