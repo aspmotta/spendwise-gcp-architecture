@@ -1,39 +1,67 @@
 # SpendWise – Production Cloud Architecture Case Study
 
-This repository documents the architecture and engineering decisions behind a real-world AI-powered SaaS running in production on Google Cloud.
+## Executive Summary
 
-The goal is to explain how reliability, cost control and scalability are handled when operating a system that processes financial data using probabilistic AI models.
+SpendWise is a production SaaS that processes real financial documents using AI while guaranteeing accounting correctness.
+
+LLMs are probabilistic systems, but financial data must be deterministic.  
+The platform was designed so incorrect data is harder to produce than a processing failure.
+
+Core approach:
+
+AI generates → system verifies → only validated data is accepted
+
+This repository documents the architectural decisions required to safely operate AI in a reliability-critical workflow.
+
+---
+
+## Why this is a hard problem
+
+Credit card invoices are inconsistent across banks and layouts.  
+AI extraction is inherently uncertain.  
+Users, however, expect exact accounting.
+
+This creates a constraint:
+
+> The system must tolerate AI uncertainty without propagating financial errors.
+
+---
 
 ## What this demonstrates
 
-- Designing deterministic workflows on top of non-deterministic LLM outputs
-- Operating a serverless system with real users and real billing constraints
-- **Cost-aware AI usage**: Context Caching (75% token reduction), Hybrid Models, and Learning Systems
-- Async processing and validation pipelines with Celery
-- Failure mitigation strategies for financial data integrity (Reconciliation Loops)
+- Deterministic workflows on top of probabilistic AI outputs
+- Cost-aware multi-model strategy (Pro vs Flash + caching + learning rules)
+- Serverless architecture designed for burst workloads
+- Async processing pipelines with reconciliation validation
+- Failure containment strategies instead of blind retries
 
-## System context
+---
 
-SpendWise is a financial automation platform that converts PDF credit card statements into structured data and insights.
+## System Context
 
-**Flow:** Users upload monthly invoices → the platform extracts, validates and categorizes transactions → dashboards are generated automatically.
+SpendWise converts PDF credit card statements into structured financial insights.
 
-The architecture is designed so the system refuses uncertainty instead of storing wrong financial data.
+Flow:
+Upload → Extract → Validate → Store → Visualize
 
-## Production constraints
+Unlike typical document AI systems, the platform refuses uncertain results rather than storing incorrect data.
 
-This system operates under real-world constraints:
+---
 
-- unpredictable document formats (Nubank, Itaú, Bradesco, C6, etc.)
+## Production Constraints
+
+The system operates under real-world conditions:
+
+- unpredictable document formats (Nubank, Itaú, Bradesco, C6…)
 - probabilistic AI extraction
-- cost per request matters (LLM tokens + Compute time)
-- financial correctness required (transactions must sum to total)
+- cost per request matters
+- totals must reconcile exactly
 
 Because of this, AI is treated as a fallible component — never as source of truth.
 
 ---
 
-More details about reliability, cost strategy and scaling decisions are documented in the sections below.
+Detailed reliability, cost and scaling decisions are documented below.
 
 ## Engineering Decisions
 
