@@ -1,17 +1,51 @@
-# SpendWise – Production Cloud Architecture Case Study
+## SpendWise — Reliable AI Processing for Financial Documents
 
-## Executive Summary
+**Production SaaS that converts credit card statements into structured financial data without trusting the AI output.**
 
-SpendWise is a production SaaS that processes real financial documents using AI while guaranteeing accounting correctness.
+Financial systems cannot tolerate silent errors, but LLM extraction is inherently probabilistic.
 
-LLMs are probabilistic systems, but financial data must be deterministic.  
-The platform was designed so incorrect data is harder to produce than a processing failure.
+Instead of trying to make the model perfect, the system was designed so incorrect data is harder to produce than a processing failure.
 
-Core approach:
+**Core principle**
 
-AI generates → system verifies → only validated data is accepted
+AI proposes → system verifies → only reconciled data is accepted
 
-This repository documents the architectural decisions required to safely operate AI in a reliability-critical workflow.
+If totals don’t match:
+- a constrained correction pass runs
+- if still inconsistent → the system refuses the result and requires review
+
+The platform prefers failing processing over storing wrong financial records.
+
+---
+
+### Why this matters
+
+Most AI document pipelines optimize for extraction accuracy.
+
+In accounting workflows, accuracy is not enough — correctness must be guaranteed.
+
+This architecture demonstrates how to safely embed probabilistic models inside deterministic systems using validation, reconciliation and failure containment.
+
+---
+
+### What this repository shows
+
+- Operating AI in reliability-critical workflows
+- Designing validation layers around non-deterministic components
+- Cost-aware multi-model orchestration
+- Serverless async processing under burst workloads
+- Failure containment instead of blind retries
+
+---
+
+### Real constraints handled
+
+- inconsistent invoice layouts across banks
+- probabilistic model output
+- per-request cost pressure
+- exact reconciliation requirement
+
+AI is treated as a fallible sensor — never the source of truth.
 
 ---
 
