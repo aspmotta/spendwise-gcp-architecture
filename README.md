@@ -272,3 +272,13 @@ The primary scaling risks identified:
 **Current Solutions:**
 - **Queue Throttling**: Celery workers process tasks at a controlled rate.
 - **Connection Pooling**: SQLAlchemy pool settings optimized for Cloud Run.
+
+---
+
+## Notes
+
+This repository documents architectural patterns observed in a real production system.
+
+The goal is to illustrate how probabilistic AI components can be safely integrated into workflows that require deterministic correctness.
+
+If you are working on similar problems or evaluating reliability strategies for AI-enabled systems, feel free to reach out or open a discussion.
