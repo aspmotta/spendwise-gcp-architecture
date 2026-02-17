@@ -49,6 +49,31 @@ AI is treated as a fallible sensor — never the source of truth.
 
 ---
 
+## Business Impact
+
+This architecture pattern applies to any system where AI output cannot be blindly trusted:
+
+- financial processing
+- compliance automation
+- document ingestion pipelines
+- internal operational tooling
+- SaaS products handling user data
+
+The key problem solved is not OCR accuracy — it is operational risk.
+
+Instead of improving model precision indefinitely, the system isolates uncertainty and guarantees deterministic outcomes.
+
+Practical results of this approach:
+
+- prevents silent data corruption
+- enables AI adoption in regulated workflows
+- reduces need for manual auditing
+- allows safe automation of previously human-verified tasks
+
+This is especially relevant for early-stage SaaS teams adopting AI features without reliability engineering expertise.
+
+---
+
 ## Why this is a hard problem
 
 Credit card invoices are inconsistent across banks and layouts.  
